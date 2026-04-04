@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  /* ── Reset & Base ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; cursor: none !important; }
+  body { font-family: 'Manrope', sans-serif; background: #ffffff; color: #1a1a1b; -webkit-font-smoothing: antialiased; }
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0,'wght' 200,'GRAD' 0,'opsz' 24; }
+
+  /* ── Custom cursor ── */
+  #cursor {
+    position: fixed; width: 8px; height: 8px;
+    background: #6B2FFA; border-radius: 50%;
+    pointer-events: none; z-index: 9999;
+    transform: translate(-50%,-50%);
+    transition: width .18s, height .18s;
+  }
+  #cursor-ring {
+    position: fixed; width: 32px; height: 32px;
+    border: 1.5px solid rgba(107,47,250,.22); border-radius: 50%;
+    pointer-events: none; z-index: 9998;
+    transform: translate(-50%,-50%);
+    transition: left .09s ease-out, top .09s ease-out;
+  }
+
+  /* ── Pages ── */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* ── NAV — flat, full-width, exactly like screenshot ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 48px;
+    background: rgba(255,255,255,0.96);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(26,26,27,0.07);
+  }
+  .nav-logo {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700; font-size: 16px;
+    letter-spacing: .06em; text-transform: uppercase;
+    color: #1a1a1b; background: none; border: none;
+  }
+  .nav-links { display: flex; align-items: center; gap: 40px; }
+  .nav-lnk {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 11px; letter-spacing: .08em;
+    text-transform: uppercase; font-weight: 600;
+    color: #737577; background: none; border: none;
+    transition: color .2s; padding: 0; position: relative;
+  }
+  .nav-lnk:hover { color: #1a1a1b; }
+  .nav-lnk.active { color: #1a1a1b; font-weight: 700; border-bottom: 2px solid #1a1a1b; padding-bottom: 2px; }
+  .nav-hire {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 11px; letter-spacing: .12em;
+    text-transform: uppercase; font-weight: 700;
+    background: #3a3a3b; color: #fff;
+    border: none; padding: 12px 28px;
+    border-radius: 2px;
+    transition: background .2s; text-decoration: none; display: inline-block;
+  }
+  .nav-hire:hover { background: #6B2FFA; }
+
+  /* ── HERO HEADLINE — big gradient like screenshot ── */
+  .hero-line-1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: clamp(4rem, 11vw, 9.5rem);
+    line-height: .9;
+    letter-spacing: -.04em;
+    text-transform: uppercase;
+    /* Violet → dark: left to right like "PRACTICAL" in screenshot */
+    background: linear-gradient(90deg, #6B2FFA 0%, #3a3a3b 70%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero-line-2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: clamp(4rem, 11vw, 9.5rem);
+    line-height: .9;
+    letter-spacing: -.04em;
+    text-transform: uppercase;
+    /* dark → teal like "POETRY." in screenshot */
+    background: linear-gradient(90deg, #3a3a3b 10%, #2d7a8a 60%, #7ad4e0 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* ── Tags ── */
+  .tag {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 10px; letter-spacing: .08em;
+    text-transform: uppercase; font-weight: 600;
+    color: #6B2FFA; background: rgba(107,47,250,.07);
+    border: 1px solid rgba(107,47,250,.18);
+    padding: 4px 11px; border-radius: 2px; display: inline-block;
+  }
+
+  /* ── Buttons ── */
+  .btn-v {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 11px; letter-spacing: .15em;
+    text-transform: uppercase; font-weight: 700;
+    background: #6B2FFA; color: #fff;
+    border: none; padding: 14px 40px; border-radius: 2px;
+    transition: opacity .2s, transform .15s;
+    text-decoration: none; display: inline-block;
+  }
+  .btn-v:hover { opacity: .82; transform: translateY(-1px); }
+  .btn-o {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 11px; letter-spacing: .15em;
+    text-transform: uppercase; font-weight: 700;
+    background: transparent; color: #1a1a1b;
+    border: 1.5px solid rgba(26,26,27,.2);
+    padding: 13px 36px; border-radius: 2px;
+    transition: border-color .2s, color .2s;
+  }
+  .btn-o:hover { border-color: #6B2FFA; color: #6B2FFA; }
+
+  /* ── Arrow link ── */
+  .al {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 10px; letter-spacing: .12em;
+    text-transform: uppercase; font-weight: 700;
+    color: #1a1a1b; background: none; border: none;
+    display: inline-flex; align-items: center; gap: 6px;
+    position: relative; transition: color .2s;
+  }
+  .al::after {
+    content: ''; position: absolute; bottom: -2px;
+    left: 0; right: 0; height: 1.5px; background: #6B2FFA;
+    transform: scaleX(0); transform-origin: left; transition: transform .3s;
+  }
+  .al:hover { color: #6B2FFA; }
+  .al:hover::after { transform: scaleX(1); }
+  .al .material-symbols-outlined { font-size: 14px; transition: transform .25s; }
+  .al:hover .material-symbols-outlined { transform: translate(3px,-3px); }
+
+  /* ── Section label ── */
+  .sec-label {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 10px; letter-spacing: .2em;
+    text-transform: uppercase; font-weight: 700;
+    color: #a0a3a5;
+  }
+
+  /* ── Project card ── */
+  .proj-wrap { transition: transform .55s cubic-bezier(.25,.46,.45,.94); }
+  .proj-wrap:hover { transform: scale(1.025); }
+  .proj-wrap img {
+    filter: grayscale(90%);
+    transition: filter .65s ease, transform .65s ease;
+  }
+  .proj-wrap:hover img { filter: grayscale(0%); transform: scale(1.04); }
+
+  .proj-item {
+    padding-left: 0;
+    border-left: 3px solid transparent;
+    transition: border-color .3s, padding-left .3s;
+  }
+  .proj-item:hover { border-left-color: #6B2FFA; padding-left: 10px; }
+
+  /* ── Process step ── */
+  .step-row {
+    display: grid; grid-template-columns: 64px 180px 1fr; gap: 20px;
+    padding: 22px 0; border-bottom: 1px solid rgba(26,26,27,.07);
+    list-style: none; transition: background .15s, padding-left .15s;
+  }
+  .step-row:hover { background: #fafafa; padding-left: 8px; }
+
+  /* ── CS Layout ── */
+  .cw { max-width: 1080px; margin: 0 auto; padding: 0 40px; }
+  .cs-meta {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 1px; background: rgba(26,26,27,.08);
+    border: 1px solid rgba(26,26,27,.08); margin-top: 48px;
+  }
+  .cs-meta-item { background: #fff; padding: 22px 26px; }
+  .cs-row {
+    display: grid; grid-template-columns: 180px 1fr;
+    gap: 56px; padding: 60px 0;
+    border-bottom: 1px solid rgba(26,26,27,.08);
+  }
+  .cs-impact {
+    display: grid; grid-template-columns: repeat(3,1fr);
+    gap: 1px; background: rgba(107,47,250,.12);
+    border: 1px solid rgba(107,47,250,.15); margin-top: 36px;
+  }
+  .cs-impact-item { background: #fff; padding: 36px 28px; }
+
+  /* ── Marquee ── */
+  @keyframes mar { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+  .mar { display:flex; animation:mar 28s linear infinite; white-space:nowrap; }
+  .mar:hover { animation-play-state:paused; }
+
+  /* ── Reveal ── */
+  .rv { opacity:0; transform:translateY(22px); transition:opacity .65s ease,transform .65s ease; }
+  .rv.on { opacity:1; transform:none; }
+  .d1{transition-delay:.1s;} .d2{transition-delay:.2s;} .d3{transition-delay:.3s;}
+
+  @media(max-width:768px){
+    nav { padding: 16px 24px; }
+    .cs-meta,.cs-row,.cs-impact { grid-template-columns:1fr; }
+    .step-row { grid-template-columns:48px 1fr; }
+    .md-offset { margin-top:0 !important; }
+  }
+</style>
+</head>
+<body>
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- ── NAV ── -->
+<nav>
+  <button class="nav-logo" onclick="showPage('home')">Sara Miftadinow</button>
+  <div class="nav-links">
+    <button id="nw" class="nav-lnk active" onclick="showPage('home')">Work</button>
+    <button id="na" class="nav-lnk" onclick="showPage('about')">About</button>
+    <button class="nav-lnk" onclick="goContact()">Contact</button>
+  </div>
+  <a href="/cdn-cgi/l/email-protection#6b180a190a4506020d1f0a0f0205041c2b0c060a020745080406" class="nav-hire">Hire Me</a>
+</nav>
+
+
+<!-- ══════════════════ HOME -->
+<div id="page-home" class="page active">
+
+  <!-- HERO -->
+  <section style="min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:120px 48px 80px; position:relative;">
+    <div style="max-width:1100px; width:100%; text-align:center;">
+      <!-- eyebrow -->
+      <p class="sec-label" style="margin-bottom:48px; letter-spacing:.28em;">Warsaw, Poland — Available for new projects</p>
+
+      <!-- The big two-line gradient headline -->
+      <div style="margin-bottom:64px;">
+        <div class="hero-line-1">PRODUCT</div>
+        <div class="hero-line-2">DESIGNER.</div>
+      </div>
+
+      <!-- Sub layout matching screenshot: text left, scroll right -->
+      <div style="display:flex; justify-content:space-between; align-items:flex-end; gap:32px; flex-wrap:wrap; text-align:left;">
+        <p style="font-family:'Manrope',sans-serif; font-size:18px; color:#737577; line-height:1.65; max-width:420px; font-weight:300;">
+          6 years end-to-end product design. Mobile &amp; web apps, TV platforms, CRM systems. I balance user needs with business impact — and measure the difference.
+        </p>
+        <div style="display:flex; align-items:center; gap:16px;">
+          <button onclick="document.getElementById('work-anchor').scrollIntoView({behavior:'smooth'})" class="al">
+            Scroll to explore
+          </button>
+          <div style="width:1px; height:60px; background:linear-gradient(to bottom,#6B2FFA,rgba(107,47,250,0));"></div>
+        </div>
+      </div>
+
+      <!-- Client tags -->
+      <div style="margin-top:36px; display:flex; flex-wrap:wrap; justify-content:center; gap:8px;">
+        <span class="tag">Pracuj.pl</span>
+        <span class="tag">Vectra</span>
+        <span class="tag">TV Smart</span>
+        <span class="tag">AioCare</span>
+        <span class="tag">Blue Online</span>
+        <span class="tag">VOD Warszawa</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div style="border-top:1px solid rgba(26,26,27,.07); border-bottom:1px solid rgba(26,26,27,.07); padding:13px 0; overflow:hidden; background:#fafafa;">
+    <div class="mar">
+      <span style="font-family:'Space Grotesk',sans-serif;font-size:10px;letter-spacing:.22em;text-transform:uppercase;font-weight:600;color:#a0a3a5;padding:0 44px;">Product Design</span>
+      <span style="color:#ddd;padding:0 8px;">·</span>
+      <span style="font-family:'Space Grotesk',sans-serif;font-size:10px;letter-spacing:.22em;text-transform:uppercase;font-weight:600;color:#6B2FFA;padding:0 44px;">UX Research</span>
+      <span style="color:#ddd;padding:0 8px;">·</span>
+      <span style="font-family:'Space Grotesk',sans-serif;font-size:10px;letter-spacing:.22em;text-transform:uppercase;font-weight:600;color:#a0a3a5;padding:0 44px;">Design Systems</span>
+      <span style="color:#ddd;padding:0 8px;">·</span>
+      <span style="font-family:'Space Grotesk',sans-serif;font-size:10px;letter-spacing:.22em;text-transform:uppercase;font-weight:600;color:#6B2FFA;padding:0 44px;">Mobile &amp; Web</span>
+      <span style="color:#ddd;padding:0 8px;">·</span>
+      <span style="font-family:'Space Grotesk',sans-serif;font-size:10px;letter-spacing:.22em;text-transform:uppercase;font-weight:600;color:#a0a3a5;padding:0 44px;">TV Platforms</span>
+      <span style="color:#ddd;padding:0 8px;">·</span>
+      <span style="font-family:'Space Grotesk',sans-serif;font-size:10px;letter-spacing:.22em;text-transform:uppercase;font-weight:600;color:#6B2FFA;padding:0 44px;">Enterprise CRM</span>
+      <span style="color:#ddd;padding:0 8px;">·</span>
+      <span style="font-family:'Space Grotesk',sans-serif;font-size:10px;letter-spacing:.22em;text-transform:uppercase;font-weight:600;color:#a0a3a5;padding:0 44px;">WCAG Accessibility</span>
+      <span style="color:#ddd;padding:0 8px;">·</span>
+      <!-- repeat -->
+      <span style="font-family:'Space Grotesk',sans-serif;font-size:10px;letter-spacing:.22em;text-transform:uppercase;font-weight:600;color:#a0a3a5;padding:0 44px;">Product Design</span>
+      <span style="color:#ddd;padding:0 8px;">·</span>
+      <span style="font-family:'Space Grotesk',sans-serif;font-size:10px;letter-spacing:.22em;text-transform:uppercase;font-weight:600;color:#6B2FFA;padding:0 44px;">UX Research</span>
+      <span style="color:#ddd;padding:0 8px;">·</span>
+      <span style="font-family:'Space Grotesk',sans-serif;font-size:10px;letter-spacing:.22em;text-transform:uppercase;font-weight:600;color:#a0a3a5;padding:0 44px;">Design Systems</span>
+      <span style="color:#ddd;padding:0 8px;">·</span>
+      <span style="font-family:'Space Grotesk',sans-serif;font-size:10px;letter-spacing:.22em;text-transform:uppercase;font-weight:600;color:#6B2FFA;padding:0 44px;">Mobile &amp; Web</span>
+      <span style="color:#ddd;padding:0 8px;">·</span>
+      <span style="font-family:'Space Grotesk',sans-serif;font-size:10px;letter-spacing:.22em;text-transform:uppercase;font-weight:600;color:#a0a3a5;padding:0 44px;">TV Platforms</span>
+      <span style="color:#ddd;padding:0 8px;">·</span>
+      <span style="font-family:'Space Grotesk',sans-serif;font-size:10px;letter-spacing:.22em;text-transform:uppercase;font-weight:600;color:#6B2FFA;padding:0 44px;">Enterprise CRM</span>
+      <span style="color:#ddd;padding:0 8px;">·</span>
+      <span style="font-family:'Space Grotesk',sans-serif;font-size:10px;letter-spacing:.22em;text-transform:uppercase;font-weight:600;color:#a0a3a5;padding:0 44px;">WCAG Accessibility</span>
+      <span style="color:#ddd;padding:0 8px;">·</span>
+    </div>
+  </div>
+
+  <!-- SELECTED WORK -->
+  <section id="work-anchor" style="padding:96px 48px; background:#f9f9f9;">
+    <div style="max-width:1300px; margin:0 auto;">
+      <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:80px;">
+        <h2 style="font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:clamp(28px,3.5vw,42px); letter-spacing:-.02em; text-transform:uppercase;">Selected Releases</h2>
+        <span class="sec-label">Collection 2020–2026</span>
+      </div>
+
+      <!-- Staggered 2-col grid -->
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:48px 64px;">
+
+        <!-- 01 AioCare -->
+        <div onclick="showPage('cs-aiocare')" class="proj-item" style="cursor:pointer;">
+          <div class="proj-wrap" style="aspect-ratio:4/5; background:#fff; border-radius:4px; overflow:hidden; margin-bottom:20px; box-shadow:0 20px 48px rgba(26,26,27,0.05);">
+            <img src="AioCare.png" alt="AioCare" style="width:100%;height:100%;object-fit:cover;object-position:top;display:block;"/>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:start;">
+            <div>
+              <h3 style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:18px;letter-spacing:-.01em;text-transform:uppercase;margin-bottom:4px;">AioCare</h3>
+              <p class="sec-label" style="margin-bottom:10px;">Health Tech — Lead Designer</p>
+              <p style="font-family:'Manrope',sans-serif;font-size:13px;color:#737577;line-height:1.65;max-width:280px;margin-bottom:12px;">End-to-end monitoring system for chronic lung disease — web dashboard, mobile app, 1,816 clinical patients.</p>
+              <div style="display:flex;flex-wrap:wrap;gap:6px;">
+                <span class="tag">Web App</span><span class="tag">Mobile App</span><span class="tag">Design System</span>
+              </div>
+            </div>
+            <span style="font-family:'Space Grotesk',sans-serif;font-weight:300;font-size:11px;color:#a0a3a5;flex-shrink:0;">2022</span>
+          </div>
+        </div>
+
+        <!-- 02 Vectra CRM — offset -->
+        <div onclick="showPage('cs-vectra')" class="proj-item md-offset" style="cursor:pointer;margin-top:128px;">
+          <div class="proj-wrap" style="aspect-ratio:4/5;background:#fff;border-radius:4px;overflow:hidden;margin-bottom:20px;box-shadow:0 20px 48px rgba(26,26,27,0.05);">
+            <img src="Vectra_CRM.png" alt="Vectra CRM" style="width:100%;height:100%;object-fit:cover;object-position:top;display:block;"/>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:start;">
+            <div>
+              <h3 style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:18px;letter-spacing:-.01em;text-transform:uppercase;margin-bottom:4px;">Vectra CRM</h3>
+              <p class="sec-label" style="margin-bottom:10px;">Enterprise — Product Designer</p>
+              <p style="font-family:'Manrope',sans-serif;font-size:13px;color:#737577;line-height:1.65;max-width:280px;margin-bottom:12px;">CRM for Poland's national telco operator — order management, component library, hundreds of daily users.</p>
+              <div style="display:flex;flex-wrap:wrap;gap:6px;">
+                <span class="tag">Web App</span><span class="tag">Enterprise UX</span><span class="tag">CRM</span>
+              </div>
+            </div>
+            <span style="font-family:'Space Grotesk',sans-serif;font-weight:300;font-size:11px;color:#a0a3a5;flex-shrink:0;">2023</span>
+          </div>
+        </div>
+
+        <!-- 03 TV Smart -->
+        <div onclick="showPage('cs-tvsmart')" class="proj-item" style="cursor:pointer;">
+          <div class="proj-wrap" style="aspect-ratio:4/5;background:#fff;border-radius:4px;overflow:hidden;margin-bottom:20px;box-shadow:0 20px 48px rgba(26,26,27,0.05);">
+            <img src="TV_Smart.png" alt="TV Smart" style="width:100%;height:100%;object-fit:cover;object-position:top;display:block;"/>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:start;">
+            <div>
+              <h3 style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:18px;letter-spacing:-.01em;text-transform:uppercase;margin-bottom:4px;">TV Smart</h3>
+              <p class="sec-label" style="margin-bottom:10px;">Streaming — Lead Designer</p>
+              <p style="font-family:'Manrope',sans-serif;font-size:13px;color:#737577;line-height:1.65;max-width:280px;margin-bottom:12px;">Multi-platform ecosystem across TV box, TV app, web, and mobile. Full design system migration from Adobe XD to Figma.</p>
+              <div style="display:flex;flex-wrap:wrap;gap:6px;">
+                <span class="tag">TV Box</span><span class="tag">TV App</span><span class="tag">Web RWD</span><span class="tag">Design System</span>
+              </div>
+            </div>
+            <span style="font-family:'Space Grotesk',sans-serif;font-weight:300;font-size:11px;color:#a0a3a5;flex-shrink:0;">2023</span>
+          </div>
+        </div>
+
+        <!-- 04 Pracuj.pl — offset -->
+        <div onclick="showPage('cs-pracuj')" class="proj-item md-offset" style="cursor:pointer;margin-top:128px;">
+          <div class="proj-wrap" style="aspect-ratio:4/5;background:#fff;border-radius:4px;overflow:hidden;margin-bottom:20px;box-shadow:0 20px 48px rgba(26,26,27,0.05);">
+            <img src="Pracuj_pl.png" alt="Pracuj.pl" style="width:100%;height:100%;object-fit:cover;object-position:top;display:block;"/>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:start;">
+            <div>
+              <h3 style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:18px;letter-spacing:-.01em;text-transform:uppercase;margin-bottom:4px;">Pracuj.pl</h3>
+              <p class="sec-label" style="margin-bottom:10px;">Recruitment — Product Designer</p>
+              <p style="font-family:'Manrope',sans-serif;font-size:13px;color:#737577;line-height:1.65;max-width:280px;margin-bottom:12px;">Mobile web redesign for Poland's largest job portal — research-driven, conversion-focused, millions of monthly users.</p>
+              <div style="display:flex;flex-wrap:wrap;gap:6px;">
+                <span class="tag">Web RWD</span><span class="tag">Mobile Web</span><span class="tag">Research</span>
+              </div>
+            </div>
+            <span style="font-family:'Space Grotesk',sans-serif;font-weight:300;font-size:11px;color:#a0a3a5;flex-shrink:0;">2024</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- PHILOSOPHY -->
+  <section style="padding:160px 48px; background:#ffffff; overflow:hidden; position:relative;">
+    <div style="max-width:1000px; margin:0 auto; position:relative;">
+      <div style="position:absolute;top:-40px;left:-20px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:200px;line-height:1;color:rgba(26,26,27,.03);user-select:none;pointer-events:none;">"</div>
+      <div style="position:relative;z-index:1;text-align:right;">
+        <p style="font-family:'Space Grotesk',sans-serif;font-weight:300;font-size:clamp(22px,3.8vw,48px);line-height:1.25;letter-spacing:-.02em;color:#2a2a2b;max-width:720px;margin-left:auto;">
+          Design is no longer just about utility;<br/>it's about <em style="font-style:italic;color:#6B2FFA;">atmosphere</em>.
+        </p>
+        <div style="margin-top:32px;display:inline-flex;align-items:center;gap:14px;">
+          <div style="height:1px;width:60px;background:rgba(107,47,250,.3);"></div>
+          <span style="font-family:'Space Grotesk',sans-serif;font-size:10px;letter-spacing:.2em;text-transform:uppercase;font-weight:700;color:#6B2FFA;">The Approach</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- METHODOLOGY -->
+  <section style="padding:120px 48px; background:#f9f9f9;">
+    <div style="max-width:1300px; margin:0 auto;">
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:48px;">
+
+        <div style="display:flex;flex-direction:column;gap:20px;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;color:#6B2FFA;">01.</span>
+            <span class="material-symbols-outlined" style="color:rgba(107,47,250,.35);font-size:20px;">search</span>
+          </div>
+          <h4 style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14px;letter-spacing:.12em;text-transform:uppercase;">Research</h4>
+          <p style="font-family:'Manrope',sans-serif;font-size:13px;color:#737577;line-height:1.65;font-weight:300;">User interviews, competitive analysis, analytics — find the real problem before designing the solution.</p>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:20px;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;color:#6B2FFA;">02.</span>
+            <span class="material-symbols-outlined" style="color:rgba(107,47,250,.35);font-size:20px;">account_tree</span>
+          </div>
+          <h4 style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14px;letter-spacing:.12em;text-transform:uppercase;">Structure</h4>
+          <p style="font-family:'Manrope',sans-serif;font-size:13px;color:#737577;line-height:1.65;font-weight:300;">Information architecture, user flows, wireframes — structure before aesthetics, always.</p>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:20px;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;color:#6B2FFA;">03.</span>
+            <span class="material-symbols-outlined" style="color:rgba(107,47,250,.35);font-size:20px;">auto_awesome</span>
+          </div>
+          <h4 style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14px;letter-spacing:.12em;text-transform:uppercase;">Design</h4>
+          <p style="font-family:'Manrope',sans-serif;font-size:13px;color:#737577;line-height:1.65;font-weight:300;">High-fidelity UI, design system, prototypes — precision execution with a scalable component foundation.</p>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:20px;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;color:#6B2FFA;">04.</span>
+            <span class="material-symbols-outlined" style="color:rgba(107,47,250,.35);font-size:20px;">rocket_launch</span>
+          </div>
+          <h4 style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14px;letter-spacing:.12em;text-transform:uppercase;">Deliver</h4>
+          <p style="font-family:'Manrope',sans-serif;font-size:13px;color:#737577;line-height:1.65;font-weight:300;">Developer handoff, QA support, iteration — I stay in the room until the product ships correctly.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section id="contact-anchor" style="padding:160px 48px;background:#ffffff;text-align:center;">
+    <div style="max-width:900px;margin:0 auto;">
+      <div style="width:200px;height:200px;background:radial-gradient(circle,rgba(107,47,250,.1) 0%,transparent 70%);margin:0 auto -60px;border-radius:50%;pointer-events:none;"></div>
+      <h2 style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(2.5rem,7vw,5.5rem);letter-spacing:-.04em;text-transform:uppercase;line-height:.92;margin-bottom:48px;position:relative;">
+        READY TO BUILD<br/>TOMORROW?
+      </h2>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:16px;">
+        <a href="/cdn-cgi/l/email-protection#2a594b584b0447434c5e4b4e4344455d6a4d474b434604494547" class="btn-v" style="padding:16px 52px;font-size:11px;letter-spacing:.2em;">Start a Project</a>
+        <p style="font-family:'Manrope',sans-serif;font-size:13px;color:#a0a3a5;font-weight:300;">Currently accepting new projects for 2026.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer style="border-top:1px solid rgba(26,26,27,.08);padding:64px 48px;background:#fff;">
+    <div style="max-width:1300px;margin:0 auto;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:start;gap:40px;">
+      <div style="max-width:320px;">
+        <p style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:12px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px;">Sara Miftadinow</p>
+        <p style="font-family:'Manrope',sans-serif;font-size:13px;color:#737577;line-height:1.65;font-weight:300;">Product designer specialising in complex digital systems — health tech, streaming, enterprise, and recruitment.</p>
+        <div style="width:28px;height:3px;background:#6B2FFA;border-radius:2px;margin-top:16px;"></div>
+      </div>
+      <div style="display:flex;gap:64px;flex-wrap:wrap;">
+        <div>
+          <p style="font-family:'Space Grotesk',sans-serif;font-size:10px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#a0a3a5;margin-bottom:16px;">Work</p>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <button onclick="showPage('cs-aiocare')" style="font-family:'Manrope',sans-serif;font-size:13px;color:#737577;background:none;border:none;text-align:left;transition:color .2s;" onmouseover="this.style.color='#1a1a1b'" onmouseout="this.style.color='#737577'">AioCare</button>
+            <button onclick="showPage('cs-vectra')"  style="font-family:'Manrope',sans-serif;font-size:13px;color:#737577;background:none;border:none;text-align:left;transition:color .2s;" onmouseover="this.style.color='#1a1a1b'" onmouseout="this.style.color='#737577'">Vectra CRM</button>
+            <button onclick="showPage('cs-tvsmart')" style="font-family:'Manrope',sans-serif;font-size:13px;color:#737577;background:none;border:none;text-align:left;transition:color .2s;" onmouseover="this.style.color='#1a1a1b'" onmouseout="this.style.color='#737577'">TV Smart</button>
+            <button onclick="showPage('cs-pracuj')"  style="font-family:'Manrope',sans-serif;font-size:13px;color:#737577;background:none;border:none;text-align:left;transition:color .2s;" onmouseover="this.style.color='#1a1a1b'" onmouseout="this.style.color='#737577'">Pracuj.pl</button>
+          </div>
+        </div>
+        <div>
+          <p style="font-family:'Space Grotesk',sans-serif;font-size:10px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#a0a3a5;margin-bottom:16px;">Connect</p>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <a href="#" style="font-family:'Manrope',sans-serif;font-size:13px;color:#737577;text-decoration:none;transition:color .2s;" onmouseover="this.style.color='#1a1a1b'" onmouseout="this.style.color='#737577'">LinkedIn</a>
+            <a href="#" style="font-family:'Manrope',sans-serif;font-size:13px;color:#737577;text-decoration:none;transition:color .2s;" onmouseover="this.style.color='#1a1a1b'" onmouseout="this.style.color='#737577'">Dribbble</a>
+            <a href="/cdn-cgi/l/email-protection#2d5e4c5f4c0340444b594c494443425a6d4a404c4441034e4240" style="font-family:'Manrope',sans-serif;font-size:13px;color:#737577;text-decoration:none;transition:color .2s;" onmouseover="this.style.color='#1a1a1b'" onmouseout="this.style.color='#737577'">Email</a>
+          </div>
+        </div>
+      </div>
+      <div style="align-self:flex-end;">
+        <p style="font-family:'Space Grotesk',sans-serif;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:#a0a3a5;">© 2026 Sara Miftadinow.<br/>All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+</div><!-- /home -->
+
+
+<!-- ══════════════════ ABOUT -->
+<div id="page-about" class="page">
+  <section style="padding:140px 48px 80px; border-bottom:1px solid rgba(26,26,27,.08);">
+    <div style="max-width:1080px;margin:0 auto;">
+      <p class="sec-label" style="margin-bottom:32px;">About me</p>
+      <div style="margin-bottom:80px;">
+        <div class="hero-line-1">DESIGNER.</div>
+        <div class="hero-line-2">BUILDER.</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 400px;gap:80px;align-items:start;">
+        <div>
+          <p style="font-family:'Manrope',sans-serif;font-size:18px;color:#2a2a2b;line-height:1.65;font-weight:400;margin-bottom:24px;">For over six years, I've been designing digital products end-to-end — from research and strategy to final UI and delivery.</p>
+          <p style="font-family:'Manrope',sans-serif;font-size:14px;color:#737577;line-height:1.8;font-weight:300;margin-bottom:18px;">I create mobile and web applications, TV platforms, set-top boxes, websites, and CRM systems — always balancing user needs, business goals, and technical constraints. My work focuses on measurable product impact: improving usability, increasing conversion, and strengthening retention.</p>
+          <p style="font-family:'Manrope',sans-serif;font-size:14px;color:#737577;line-height:1.8;font-weight:300;margin-bottom:18px;">Clear communication is a core part of my process. I work closely with cross-functional teams — developers, product managers, researchers — translating complex problems into shared understanding and actionable decisions.</p>
+          <p style="font-family:'Manrope',sans-serif;font-size:14px;color:#737577;line-height:1.8;font-weight:300;margin-bottom:48px;">I'm drawn to <strong style="color:#1a1a1b;font-weight:500;">health tech, complex enterprise systems, and AI-native product design</strong> — areas where the design problem runs deeper than the surface.</p>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:32px;border-top:1px solid rgba(26,26,27,.08);padding-top:36px;">
+            <div><p class="sec-label" style="color:#6B2FFA;margin-bottom:14px;">Craft</p><ul style="font-family:'Manrope',sans-serif;font-size:12px;color:#737577;line-height:2.1;list-style:none;padding:0;font-weight:300;"><li>End-to-end product design</li><li>Design systems</li><li>UX research &amp; strategy</li><li>Interaction &amp; motion</li><li>Accessibility (WCAG)</li></ul></div>
+            <div><p class="sec-label" style="color:#6B2FFA;margin-bottom:14px;">Platforms</p><ul style="font-family:'Manrope',sans-serif;font-size:12px;color:#737577;line-height:2.1;list-style:none;padding:0;font-weight:300;"><li>Mobile (iOS &amp; Android)</li><li>Web (RWD)</li><li>TV &amp; set-top boxes</li><li>Enterprise &amp; CRM</li></ul></div>
+            <div><p class="sec-label" style="color:#6B2FFA;margin-bottom:14px;">Tools</p><ul style="font-family:'Manrope',sans-serif;font-size:12px;color:#737577;line-height:2.1;list-style:none;padding:0;font-weight:300;"><li>Figma · Adobe XD</li><li>Protopie · Miro</li><li>Jira · Confluence</li><li>AI as creative tool</li></ul></div>
+          </div>
+        </div>
+        <div style="border-radius:4px;overflow:hidden;box-shadow:0 24px 56px rgba(107,47,250,.1),0 8px 24px rgba(26,26,27,.06);">
+          <img src="About.png" alt="Sara Miftadinow" style="width:100%;display:block;filter:grayscale(100%) contrast(1.05);max-height:560px;object-fit:cover;object-position:top;"/>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section style="padding:160px 48px;background:#fff;text-align:center;">
+    <div style="max-width:700px;margin:0 auto;">
+      <h2 style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(2rem,5vw,4rem);letter-spacing:-.04em;text-transform:uppercase;line-height:.92;margin-bottom:48px;">READY TO<br/>WORK TOGETHER?</h2>
+      <div style="display:flex;justify-content:center;gap:16px;flex-wrap:wrap;">
+        <a href="/cdn-cgi/l/email-protection#9be8fae9fab5f6f2fdeffafff2f5f4ecdbfcf6faf2f7b5f8f4f6" class="btn-v" style="padding:14px 44px;">Get in touch</a>
+        <button onclick="showPage('home')" class="btn-o" style="padding:13px 36px;">See My Work</button>
+      </div>
+    </div>
+  </section>
+  <footer style="border-top:1px solid rgba(26,26,27,.08);padding:32px 48px;background:#fff;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;">
+    <span class="sec-label">Sara Miftadinow — Product Designer — Warsaw</span>
+    <div style="display:flex;gap:24px;">
+      <a href="#" style="font-family:'Manrope',sans-serif;font-size:13px;color:#737577;text-decoration:none;" onmouseover="this.style.color='#1a1a1b'" onmouseout="this.style.color='#737577'">LinkedIn</a>
+      <a href="#" style="font-family:'Manrope',sans-serif;font-size:13px;color:#737577;text-decoration:none;" onmouseover="this.style.color='#1a1a1b'" onmouseout="this.style.color='#737577'">Dribbble</a>
+      <a href="/cdn-cgi/l/email-protection#d7a4b6a5b6f9babeb1a3b6b3beb9b8a097b0bab6bebbf9b4b8ba" style="font-family:'Manrope',sans-serif;font-size:13px;color:#737577;text-decoration:none;" onmouseover="this.style.color='#1a1a1b'" onmouseout="this.style.color='#737577'">Email</a>
+    </div>
+  </footer>
+</div><!-- /about -->
+
+
+<!-- ══════════════════ CS SHARED BITS -->
+<style>
+  .cw{max-width:1080px;margin:0 auto;padding:0 40px;}
+  .cm{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(26,26,27,.08);border:1px solid rgba(26,26,27,.08);margin-top:48px;}
+  .cmi{background:#fff;padding:22px 26px;}
+  .cr{display:grid;grid-template-columns:170px 1fr;gap:56px;padding:60px 0;border-bottom:1px solid rgba(26,26,27,.08);}
+  .ci{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(107,47,250,.12);border:1px solid rgba(107,47,250,.15);margin-top:36px;}
+  .cii{background:#fff;padding:36px 28px;}
+  .cp{list-style:none;padding:0;margin:0;}
+  .cp li{display:grid;grid-template-columns:60px 160px 1fr;gap:18px;padding:18px 0;border-bottom:1px solid rgba(26,26,27,.06);transition:background .15s,padding-left .15s;}
+  .cp li:hover{background:#fafafa;padding-left:8px;}
+  .cnb{padding:28px 0;display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(26,26,27,.08);}
+  @media(max-width:768px){.cm,.cr,.ci{grid-template-columns:1fr;}.cp li{grid-template-columns:48px 1fr;}}
+</style>
+
+
+<!-- ══════════════════ CS: AioCare -->
+<div id="page-cs-aiocare" class="page">
+  <div class="cw" style="padding-top:120px;padding-bottom:48px;border-bottom:1px solid rgba(26,26,27,.08);">
+    <button onclick="showPage('home')" class="al" style="flex-direction:row-reverse;margin-bottom:40px;"><span class="material-symbols-outlined">arrow_back</span>All Projects</button>
+    <p class="sec-label" style="color:#6B2FFA;margin-bottom:14px;">AioCare · Health Tech · 2020–2022</p>
+    <h1 style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(2rem,5vw,4rem);letter-spacing:-.04em;text-transform:uppercase;line-height:.92;margin-bottom:16px;">Monitoring System for<br/>Chronic Lung Disease</h1>
+    <p style="font-family:'Manrope',sans-serif;font-size:15px;color:#737577;max-width:540px;line-height:1.7;font-weight:300;">End-to-end: web dashboard, mobile app, integrated spirometer. 1,816 patients in clinical trial.</p>
+    <div class="cm">
+      <div class="cmi"><p class="sec-label" style="color:#6B2FFA;margin-bottom:6px;">Duration</p><p style="font-family:'Manrope',sans-serif;font-size:13px;color:#2a2a2b;">Aug 2020 – Nov 2022</p></div>
+      <div class="cmi"><p class="sec-label" style="color:#6B2FFA;margin-bottom:6px;">My Role</p><p style="font-family:'Manrope',sans-serif;font-size:13px;color:#2a2a2b;">Lead UI/UX Designer — research, IA, design system, prototypes, delivery</p></div>
+      <div class="cmi"><p class="sec-label" style="color:#6B2FFA;margin-bottom:6px;">Team</p><p style="font-family:'Manrope',sans-serif;font-size:13px;color:#2a2a2b;">PO, PM, iOS/Android/FE/BE devs, 1,816 patients in clinical trial</p></div>
+      <div class="cmi"><p class="sec-label" style="color:#6B2FFA;margin-bottom:6px;">Tools</p><p style="font-family:'Manrope',sans-serif;font-size:13px;color:#2a2a2b;">Figma · Adobe XD · Jira · Confluence · Zeplin · Avocode</p></div>
+    </div>
+  </div>
+  <div style="height:500px;overflow:hidden;border-bottom:1px solid rgba(26,26,27,.08);">
+    <img src="AioCare.png" alt="AioCare" style="width:100%;height:100%;object-fit:cover;object-position:top;display:block;"/>
+  </div>
+  <div class="cw">
+    <div class="cr">
+      <div><p class="sec-label" style="color:#6B2FFA;margin-bottom:8px;">01</p><h2 style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:16px;text-transform:uppercase;letter-spacing:.06em;">Problem &amp; Context</h2></div>
+      <div><p style="font-family:'Manrope',sans-serif;font-size:14px;color:#737577;line-height:1.8;font-weight:300;margin-bottom:14px;">A professional system for monitoring and treating lung diseases — patients use the mobile app to track readings, clinicians use the web dashboard to monitor patient populations and longitudinal data.</p><p style="font-family:'Manrope',sans-serif;font-size:14px;color:#737577;line-height:1.8;font-weight:300;">Two audiences: <strong style="color:#1a1a1b;font-weight:500;">patients</strong> using the mobile app daily, and <strong style="color:#1a1a1b;font-weight:500;">clinicians</strong> using the web dashboard.</p></div>
+    </div>
+    <div class="cr">
+      <div><p class="sec-label" style="color:#6B2FFA;margin-bottom:8px;">02</p><h2 style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:16px;text-transform:uppercase;letter-spacing:.06em;">Design System</h2></div>
+      <div>
+        <p style="font-family:'Manrope',sans-serif;font-size:14px;color:#737577;line-height:1.8;font-weight:300;margin-bottom:28px;">Unified system spanning both platforms: foundational tokens, components divided into "Feature" and "Device" sections, WCAG compliance, and shared developer documentation.</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div style="border-radius:4px;overflow:hidden;box-shadow:0 8px 24px rgba(107,47,250,.08);"><img src="AioCare_Disease_diary.png" alt="Disease diary" style="width:100%;height:220px;object-fit:cover;object-position:top;display:block;"/><p style="font-family:'Manrope',sans-serif;font-size:11px;color:#a0a3a5;padding:10px 14px;">Disease diary — mobile app</p></div>
+          <div style="border-radius:4px;overflow:hidden;box-shadow:0 8px 24px rgba(107,47,250,.08);"><img src="AioCare_Profile_creation.png" alt="Profile creation" style="width:100%;height:220px;object-fit:cover;object-position:top;display:block;"/><p style="font-family:'Manrope',sans-serif;font-size:11px;color:#a0a3a5;padding:10px 14px;">Profile creation — onboarding flow</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="cr" style="border-bottom:none;">
+      <div><p class="sec-label" style="color:#6B2FFA;margin-bottom:8px;">03</p><h2 style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:16px;text-transform:uppercase;letter-spacing:.06em;">Impact</h2></div>
+      <div>
+        <div class="ci">
+          <div class="cii"><p style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:48px;letter-spacing:-.04em;color:#6B2FFA;margin-bottom:10px;">1,816</p><p style="font-family:'Manrope',sans-serif;font-size:12px;color:#737577;">Patients enrolled in clinical trial</p></div>
+          <div class="cii"><p style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:48px;letter-spacing:-.04em;color:#6B2FFA;margin-bottom:10px;">2</p><p style="font-family:'Manrope',sans-serif;font-size:12px;color:#737577;">Platforms designed end-to-end</p></div>
+          <div class="cii"><p style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:48px;letter-spacing:-.04em;color:#6B2FFA;margin-bottom:10px;">2y+</p><p style="font-family:'Manrope',sans-serif;font-size:12px;color:#737577;">Active design involvement</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="cnb">
+      <button onclick="showPage('home')" class="al" style="flex-direction:row-reverse;"><span class="material-symbols-outlined">arrow_back</span>All projects</button>
+      <button onclick="showPage('cs-vectra')" class="al">Next: Vectra CRM <span class="material-symbols-outlined">arrow_forward</span></button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════ CS: Vectra -->
+<div id="page-cs-vectra" class="page">
+  <div class="cw" style="padding-top:120px;padding-bottom:48px;border-bottom:1px solid rgba(26,26,27,.08);">
+    <button onclick="showPage('home')" class="al" style="flex-direction:row-reverse;margin-bottom:40px;"><span class="material-symbols-outlined">arrow_back</span>All Projects</button>
+    <p class="sec-label" style="color:#6B2FFA;margin-bottom:14px;">Vectra · Enterprise CRM</p>
+    <h1 style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(2rem,5vw,4rem);letter-spacing:-.04em;text-transform:uppercase;line-height:.92;margin-bottom:16px;">CRM System for a<br/>National Telco Operator</h1>
+    <p style="font-family:'Manrope',sans-serif;font-size:15px;color:#737577;max-width:540px;line-height:1.7;font-weight:300;">Complex internal tool for Vectra's customer service teams — order management, customer data, operational workflows for hundreds of daily users across Poland.</p>
+    <div class="cm">
+      <div class="cmi"><p class="sec-label" style="color:#6B2FFA;margin-bottom:6px;">My Role</p><p style="font-family:'Manrope',sans-serif;font-size:13px;color:#2a2a2b;">Product Designer — IA, interaction design, component library, usability testing</p></div>
+      <div class="cmi"><p class="sec-label" style="color:#6B2FFA;margin-bottom:6px;">Platform</p><p style="font-family:'Manrope',sans-serif;font-size:13px;color:#2a2a2b;">Web application — internal enterprise tool</p></div>
+      <div class="cmi" style="grid-column:span 2;"><p class="sec-label" style="color:#6B2FFA;margin-bottom:6px;">Tools</p><p style="font-family:'Manrope',sans-serif;font-size:13px;color:#2a2a2b;">Figma · Miro · Jira · Confluence</p></div>
+    </div>
+  </div>
+  <div style="height:500px;overflow:hidden;border-bottom:1px solid rgba(26,26,27,.08);">
+    <img src="Vectra_CRM.png" alt="Vectra CRM" style="width:100%;height:100%;object-fit:cover;object-position:top;display:block;"/>
+  </div>
+  <div class="cw">
+    <div class="cr">
+      <div><p class="sec-label" style="color:#6B2FFA;margin-bottom:8px;">01</p><h2 style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:16px;text-transform:uppercase;letter-spacing:.06em;">The Problem</h2></div>
+      <div><p style="font-family:'Manrope',sans-serif;font-size:14px;color:#737577;line-height:1.8;font-weight:300;margin-bottom:14px;">Before redesign: complex navigation, inconsistent IA, no component standards — slowing agents on every interaction. Brief: <strong style="color:#1a1a1b;font-weight:500;">redesign for operational efficiency</strong> — reduce time-on-task, improve data clarity, build a component library that scales.</p></div>
+    </div>
+    <div class="cr">
+      <div><p class="sec-label" style="color:#6B2FFA;margin-bottom:8px;">02</p><h2 style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:16px;text-transform:uppercase;letter-spacing:.06em;">7-Stage Process</h2></div>
+      <div>
+        <ul class="cp">
+          <li><span class="sec-label" style="color:#6B2FFA;">01</span><span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#2a2a2b;">Requirements</span><p style="font-family:'Manrope',sans-serif;font-size:12px;color:#737577;font-weight:300;">Stakeholder interviews and workflow shadowing with customer service agents.</p></li>
+          <li><span class="sec-label" style="color:#6B2FFA;">02</span><span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#2a2a2b;">Analysis</span><p style="font-family:'Manrope',sans-serif;font-size:12px;color:#737577;font-weight:300;">Audit of existing system — 40+ inconsistencies in UI patterns and navigation identified.</p></li>
+          <li><span class="sec-label" style="color:#6B2FFA;">03</span><span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#2a2a2b;">Prototype</span><p style="font-family:'Manrope',sans-serif;font-size:12px;color:#737577;font-weight:300;">Low and mid-fidelity wireframes: customer profile, order management, service history, case creation.</p></li>
+          <li><span class="sec-label" style="color:#6B2FFA;">04</span><span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#2a2a2b;">Usability Testing</span><p style="font-family:'Manrope',sans-serif;font-size:12px;color:#737577;font-weight:300;">Structured task tests with 6 agents, measuring time-on-task and error rate against baseline.</p></li>
+          <li style="border-bottom:none;"><span class="sec-label" style="color:#6B2FFA;">05–07</span><span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#2a2a2b;">System → Final</span><p style="font-family:'Manrope',sans-serif;font-size:12px;color:#737577;font-weight:300;">Component library, responsive grid for dense data tables, high-fidelity specs with annotated docs.</p></li>
+        </ul>
+      </div>
+    </div>
+    <div class="cr" style="border-bottom:none;">
+      <div><p class="sec-label" style="color:#6B2FFA;margin-bottom:8px;">03</p><h2 style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:16px;text-transform:uppercase;letter-spacing:.06em;">Outcome</h2></div>
+      <div><p style="font-family:'Manrope',sans-serif;font-size:14px;color:#737577;line-height:1.8;font-weight:300;">The redesigned CRM is used daily by Vectra's teams across Poland. Key improvements: <strong style="color:#1a1a1b;font-weight:500;">faster navigation, clearer order status, and a component framework that accelerated new module development.</strong></p></div>
+    </div>
+    <div class="cnb">
+      <button onclick="showPage('home')" class="al" style="flex-direction:row-reverse;"><span class="material-symbols-outlined">arrow_back</span>All projects</button>
+      <button onclick="showPage('cs-tvsmart')" class="al">Next: TV Smart <span class="material-symbols-outlined">arrow_forward</span></button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════ CS: TV Smart -->
+<div id="page-cs-tvsmart" class="page">
+
+  <!-- HEADER -->
+  <div class="cw" style="padding-top:120px;padding-bottom:56px;border-bottom:1px solid rgba(26,26,27,.08);">
+    <button onclick="showPage('home')" class="al" style="flex-direction:row-reverse;margin-bottom:40px;"><span class="material-symbols-outlined">arrow_back</span>All Projects</button>
+    <p class="sec-label" style="color:#6B2FFA;margin-bottom:14px;">Vectra · TV Smart · 2022–2024</p>
+    <h1 style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(2rem,5vw,4rem);letter-spacing:-.04em;text-transform:uppercase;line-height:.92;margin-bottom:20px;">Redesigning Login &amp;<br/>Registration Without<br/>User Data or Research</h1>
+    <p style="font-family:'Manrope',sans-serif;font-size:16px;color:#737577;max-width:600px;line-height:1.75;font-weight:300;">TV Smart by Vectra is a comprehensive streaming platform available across four surfaces: TV box, Smart TV app, responsive web, and mobile app. This case study focuses on a specific, high-stakes challenge — redesigning the login and registration flow with no existing user research, no analytics on the current flow, and no prior UX documentation to build on.</p>
+    <div class="cm" style="margin-top:40px;">
+      <div class="cmi"><p class="sec-label" style="color:#6B2FFA;margin-bottom:6px;">Duration</p><p style="font-family:'Manrope',sans-serif;font-size:13px;color:#2a2a2b;line-height:1.6;">March 2022 – March 2023 · this case study: Q3 2022</p></div>
+      <div class="cmi"><p class="sec-label" style="color:#6B2FFA;margin-bottom:6px;">My Role</p><p style="font-family:'Manrope',sans-serif;font-size:13px;color:#2a2a2b;line-height:1.6;">Lead Product Designer — UX strategy, competitive research, interaction design, design system, developer handoff</p></div>
+      <div class="cmi"><p class="sec-label" style="color:#6B2FFA;margin-bottom:6px;">Team</p><p style="font-family:'Manrope',sans-serif;font-size:13px;color:#2a2a2b;line-height:1.6;">Product Owner, Project Manager, Front-end &amp; Back-end developers, subcontracting agency (Prowee)</p></div>
+      <div class="cmi"><p class="sec-label" style="color:#6B2FFA;margin-bottom:6px;">Tools</p><p style="font-family:'Manrope',sans-serif;font-size:13px;color:#2a2a2b;line-height:1.6;">Figma · Adobe XD · Photoshop · Jira · Confluence · Miro</p></div>
+    </div>
+  </div>
+
+  <!-- HERO: after design — laptop + phone mockup -->
+  <div style="overflow:hidden;border-bottom:1px solid rgba(26,26,27,.08);background:#0a0a0a;">
+    <img src="118-2.png" alt="TV Smart redesigned login — web and mobile" style="width:100%;display:block;max-height:600px;object-fit:cover;object-position:center;"/>
+  </div>
+
+  <div class="cw">
+
+    <!-- 01 Context & constraint -->
+    <div class="cr">
+      <div>
+        <p class="sec-label" style="color:#6B2FFA;margin-bottom:8px;">01</p>
+        <h2 style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:16px;text-transform:uppercase;letter-spacing:.06em;line-height:1.4;">Context &amp;<br/>The Constraint</h2>
+      </div>
+      <div>
+        <p style="font-family:'Manrope',sans-serif;font-size:14px;color:#737577;line-height:1.85;font-weight:300;margin-bottom:20px;">I joined the TV Smart project in March 2022, initially supporting a subcontracting agency in interface design. As the project matured, I took on full ownership as Lead Product Designer — responsible for the UX across all four platforms, building the design system, and leading the migration from Adobe XD to Figma.</p>
+        <p style="font-family:'Manrope',sans-serif;font-size:14px;color:#737577;line-height:1.85;font-weight:300;margin-bottom:24px;">The login and registration flow was one of the first major challenges. It needed a complete redesign across all four surfaces simultaneously. The usual starting point — user research, analytics, session recordings — didn't exist. Just a broken flow and a deadline.</p>
+        <div style="padding:24px 28px;border-left:3px solid #6B2FFA;background:rgba(107,47,250,.04);">
+          <p style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:13px;color:#1a1a1b;line-height:1.6;">The brief: redesign authentication for TV box, Smart TV, responsive web, and mobile app — with no user data, no prior research, and no existing documentation. Build the rationale from scratch.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- BEFORE image — old web login -->
+    <div style="padding:48px 0;border-bottom:1px solid rgba(26,26,27,.08);">
+      <p class="sec-label" style="color:#a0a3a5;margin-bottom:16px;">Before — existing login screen</p>
+      <div style="border-radius:4px;overflow:hidden;box-shadow:0 8px 24px rgba(26,26,27,.08);">
+        <img src="Frame_34778.png" alt="TV Smart login — before redesign" style="width:100%;display:block;"/>
+      </div>
+      <p style="font-family:'Manrope',sans-serif;font-size:12px;color:#a0a3a5;margin-top:12px;line-height:1.6;">Login and registration combined on a single dark modal with a tab toggle — high cognitive ambiguity, no social login hierarchy, no operator login path visible on mobile. Social login buttons placed below the primary form with no visual priority.</p>
+    </div>
+
+    <!-- 02 Approach -->
+    <div class="cr">
+      <div>
+        <p class="sec-label" style="color:#6B2FFA;margin-bottom:8px;">02</p>
+        <h2 style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:16px;text-transform:uppercase;letter-spacing:.06em;line-height:1.4;">Approach:<br/>Building Without Data</h2>
+      </div>
+      <div>
+        <p style="font-family:'Manrope',sans-serif;font-size:14px;color:#737577;line-height:1.85;font-weight:300;margin-bottom:24px;">Without user research available, I structured the work around three parallel inputs that together would give a strong enough foundation to design confidently.</p>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:rgba(26,26,27,.08);border:1px solid rgba(26,26,27,.08);margin-bottom:28px;">
+          <div style="background:#fff;padding:22px 20px;">
+            <p style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#6B2FFA;margin-bottom:10px;">Competitive analysis</p>
+            <p style="font-family:'Manrope',sans-serif;font-size:12px;color:#737577;line-height:1.7;font-weight:300;">Audited login flows across 12 streaming platforms — Netflix, HBO Max, Disney+, Canal+, and regional competitors. Focus: flow length, error handling, TV-specific input patterns, cross-device continuity.</p>
+          </div>
+          <div style="background:#fff;padding:22px 20px;">
+            <p style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#6B2FFA;margin-bottom:10px;">Heuristic analysis</p>
+            <p style="font-family:'Manrope',sans-serif;font-size:12px;color:#737577;line-height:1.7;font-weight:300;">Walked through each surface logging violations against Nielsen's 10 heuristics. TV box had the most critical issues — remote-control input wasn't accounted for in the design at all.</p>
+          </div>
+          <div style="background:#fff;padding:22px 20px;">
+            <p style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#6B2FFA;margin-bottom:10px;">Technical constraints</p>
+            <p style="font-family:'Manrope',sans-serif;font-size:12px;color:#737577;line-height:1.7;font-weight:300;">Constraints session with the dev team to map what was fixed vs. flexible. Social login, session tokens, and email verification all had backend dependencies that shaped the redesign.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 03 User flows — before vs after -->
+    <div class="cr">
+      <div>
+        <p class="sec-label" style="color:#6B2FFA;margin-bottom:8px;">03</p>
+        <h2 style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:16px;text-transform:uppercase;letter-spacing:.06em;line-height:1.4;">User Flows:<br/>Before &amp; After</h2>
+      </div>
+      <div>
+        <p style="font-family:'Manrope',sans-serif;font-size:14px;color:#737577;line-height:1.85;font-weight:300;margin-bottom:24px;">One of the first artefacts was mapping the full scope of authentication flows — email login, social login (Google, Facebook, Apple), operator login (4 operators), password recovery, and registration with email and social. The before state had overlapping and undefined edge cases. The after state gave each flow a discrete, documented path.</p>
+        <div style="border-radius:4px;overflow:hidden;box-shadow:0 8px 24px rgba(26,26,27,.08);">
+          <img src="119.png" alt="Authentication user flows — before and after" style="width:100%;display:block;"/>
+        </div>
+        <p style="font-family:'Manrope',sans-serif;font-size:12px;color:#a0a3a5;margin-top:12px;line-height:1.6;">Left: before — overlapping, undocumented flows. Right: after — every path explicitly mapped, including edge cases for operator login and social auth failures.</p>
+      </div>
+    </div>
+
+    <!-- 04 Key Design Decisions -->
+    <div class="cr">
+      <div>
+        <p class="sec-label" style="color:#6B2FFA;margin-bottom:8px;">04</p>
+        <h2 style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:16px;text-transform:uppercase;letter-spacing:.06em;line-height:1.4;">Key Design<br/>Decisions</h2>
+      </div>
+      <div>
+        <div style="margin-bottom:32px;padding-bottom:32px;border-bottom:1px solid rgba(26,26,27,.07);">
+          <p style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:#1a1a1b;margin-bottom:10px;">Separating login from registration — one intent per screen</p>
+          <p style="font-family:'Manrope',sans-serif;font-size:13px;color:#737577;line-height:1.8;font-weight:300;margin-bottom:20px;">The existing flow combined login and registration on a single dark modal with a tab toggle, creating ambiguity about what the user was doing. I separated them into distinct screens with clear visual distinction — a white card form against the platform backdrop, with social login elevated above email/password to match actual usage patterns seen across competitive analysis.</p>
+          <!-- Before/after side by side -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <div>
+              <p class="sec-label" style="color:#a0a3a5;margin-bottom:10px;">Before</p>
+              <div style="border-radius:4px;overflow:hidden;box-shadow:0 6px 20px rgba(26,26,27,.1);">
+                <img src="118.png" alt="Before — old login" style="width:100%;display:block;"/>
+              </div>
+            </div>
+            <div>
+              <p class="sec-label" style="color:#6B2FFA;margin-bottom:10px;">After</p>
+              <div style="border-radius:4px;overflow:hidden;box-shadow:0 6px 20px rgba(107,47,250,.12);">
+                <img src="118-1.png" alt="After — new login" style="width:100%;display:block;"/>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-bottom:32px;padding-bottom:32px;border-bottom:1px solid rgba(26,26,27,.07);">
+          <p style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:#1a1a1b;margin-bottom:10px;">Operator login — each operator gets its own dedicated form</p>
+          <p style="font-family:'Manrope',sans-serif;font-size:13px;color:#737577;line-height:1.8;font-weight:300;margin-bottom:20px;">TV Smart serves subscribers from four operators — Vectra, Multimedia, Jambox, and Elsat — each with different login credentials (customer number, eBOK username, email, or number ID). The original design had a single generic form trying to handle all variants. I designed dedicated forms per operator, each with contextual field labels, help text linking to the operator's customer portal, and specific error messages.</p>
+          <div style="border-radius:4px;overflow:hidden;box-shadow:0 8px 24px rgba(26,26,27,.08);">
+            <img src="Our_Process.png" alt="Operator login forms — Vectra, Multimedia, Jambox" style="width:100%;display:block;"/>
+          </div>
+          <p style="font-family:'Manrope',sans-serif;font-size:12px;color:#a0a3a5;margin-top:12px;line-height:1.6;">Each operator form uses that operator's brand identity and explains exactly which credentials to use — reducing support contact for failed logins.</p>
+        </div>
+
+        <div>
+          <p style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:#1a1a1b;margin-bottom:10px;">Registration restructured as a 2-step flow</p>
+          <p style="font-family:'Manrope',sans-serif;font-size:13px;color:#737577;line-height:1.8;font-weight:300;margin-bottom:20px;">The original registration was a single long form. I restructured it into two clear steps: step 01 creates the account (credentials + social option), step 02 handles legal consents (required + optional GDPR). This separation makes the legal step feel like a natural checkpoint rather than friction, and makes partial completion recoverable.</p>
+          <div style="border-radius:4px;overflow:hidden;box-shadow:0 8px 24px rgba(107,47,250,.1);">
+            <img src="Our_Process-1.png" alt="Registration flow — step 01 and step 02" style="width:100%;display:block;"/>
+          </div>
+          <p style="font-family:'Manrope',sans-serif;font-size:12px;color:#a0a3a5;margin-top:12px;line-height:1.6;">Step 01: account creation with social login option. Step 02: consents and GDPR, separated from credentials to reduce perceived form length.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 05 Final components -->
+    <div class="cr">
+      <div>
+        <p class="sec-label" style="color:#6B2FFA;margin-bottom:8px;">05</p>
+        <h2 style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:16px;text-transform:uppercase;letter-spacing:.06em;line-height:1.4;">Final Designs</h2>
+      </div>
+      <div>
+        <p style="font-family:'Manrope',sans-serif;font-size:14px;color:#737577;line-height:1.85;font-weight:300;margin-bottom:28px;">The shipped designs cover the full authentication surface: retail login form, retail registration form (2 steps), and operator-specific login forms for all four operators. All designed in the new TV Smart white-card component language, consistent across web and mobile.</p>
+        <!-- Login form detail -->
+        <div style="margin-bottom:12px;border-radius:4px;overflow:hidden;box-shadow:0 8px 24px rgba(26,26,27,.07);">
+          <img src="Frame_1000001619.png" alt="Final retail login form" style="width:100%;display:block;"/>
+        </div>
+        <!-- Registration form detail -->
+        <div style="border-radius:4px;overflow:hidden;box-shadow:0 8px 24px rgba(26,26,27,.07);">
+          <img src="Frame_1000001620.png" alt="Final retail registration form" style="width:100%;display:block;"/>
+        </div>
+        <p style="font-family:'Manrope',sans-serif;font-size:12px;color:#a0a3a5;margin-top:12px;line-height:1.6;">Top: retail login form with social login, email/password, and operator selector. Bottom: registration form showing the 2-step structure with social options on step 01.</p>
+
+        <!-- Full mockup -->
+        <div style="margin-top:20px;border-radius:4px;overflow:hidden;box-shadow:0 12px 32px rgba(107,47,250,.1);background:#0a0a0a;">
+          <img src="Frame_34794.png" alt="TV Smart — final design on web and mobile" style="width:100%;display:block;"/>
+        </div>
+      </div>
+    </div>
+
+    <!-- 06 Outcome -->
+    <div class="cr" style="border-bottom:none;">
+      <div>
+        <p class="sec-label" style="color:#6B2FFA;margin-bottom:8px;">06</p>
+        <h2 style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:16px;text-transform:uppercase;letter-spacing:.06em;line-height:1.4;">Outcome</h2>
+      </div>
+      <div>
+        <p style="font-family:'Manrope',sans-serif;font-size:14px;color:#737577;line-height:1.85;font-weight:300;margin-bottom:32px;">The redesigned login and registration flow shipped across web and mobile for TV Smart. The white-card form language replaced the previous dark modal and became the foundation for all subsequent authentication screens on the platform. The operator login system — with dedicated forms per operator — significantly reduced ambiguity for subscribers coming from partner networks.</p>
+
+        <div class="ci">
+          <div class="cii">
+            <p style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:48px;letter-spacing:-.04em;color:#6B2FFA;margin-bottom:10px;">4</p>
+            <p style="font-family:'Manrope',sans-serif;font-size:12px;color:#737577;line-height:1.6;">Operators each given a dedicated login form with contextual credentials and help copy</p>
+          </div>
+          <div class="cii">
+            <p style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:48px;letter-spacing:-.04em;color:#6B2FFA;margin-bottom:10px;">2</p>
+            <p style="font-family:'Manrope',sans-serif;font-size:12px;color:#737577;line-height:1.6;">Registration steps replacing one long form — account creation separated from legal consents</p>
+          </div>
+          <div class="cii">
+            <p style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:48px;letter-spacing:-.04em;color:#6B2FFA;margin-bottom:10px;">0</p>
+            <p style="font-family:'Manrope',sans-serif;font-size:12px;color:#737577;line-height:1.6;">Baseline user data to start with — the entire rationale built from competitive analysis and heuristics</p>
+          </div>
+        </div>
+
+        <div style="margin-top:36px;padding:28px 32px;background:#fafafa;border-radius:4px;border:1px solid rgba(26,26,27,.07);">
+          <p style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:#6B2FFA;margin-bottom:14px;">What this project taught me</p>
+          <p style="font-family:'Manrope',sans-serif;font-size:13px;color:#737577;line-height:1.8;font-weight:300;">Designing without user data is a real constraint that most designers encounter at some point. This project reinforced something I believe strongly: strong design reasoning is more durable than strong data alone. Data tells you what happened; reasoning tells you what should happen. The key is documenting your assumptions explicitly — so they can be tested when data eventually arrives. Which is exactly what happened here: once we had usage analytics post-launch, the assumptions held up in most areas and gave us clear targets for the next iteration in the areas they didn't.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- BOTTOM NAV -->
+    <div class="cnb">
+      <button onclick="showPage('home')" class="al" style="flex-direction:row-reverse;"><span class="material-symbols-outlined">arrow_back</span>All projects</button>
+      <button onclick="showPage('cs-pracuj')" class="al">Next: Pracuj.pl <span class="material-symbols-outlined">arrow_forward</span></button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════ CS: Pracuj.pl -->
+<div id="page-cs-pracuj" class="page">
+
+  <!-- HEADER -->
+  <div class="cw" style="padding-top:120px;padding-bottom:56px;border-bottom:1px solid rgba(26,26,27,.08);">
+    <button onclick="showPage('home')" class="al" style="flex-direction:row-reverse;margin-bottom:40px;"><span class="material-symbols-outlined">arrow_back</span>All Projects</button>
+    <p class="sec-label" style="color:#6B2FFA;margin-bottom:14px;">Pracuj.pl · Mobile Web · 2024</p>
+    <h1 style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(2rem,5vw,4rem);letter-spacing:-.04em;text-transform:uppercase;line-height:.92;margin-bottom:20px;">Improving the Mobile<br/>Web Application Flow</h1>
+    <p style="font-family:'Manrope',sans-serif;font-size:16px;color:#737577;max-width:600px;line-height:1.75;font-weight:300;">Pracuj.pl is Poland's largest recruitment platform, connecting employers with millions of job seekers since 2000. Despite strong desktop performance, the mobile web experience was generating significant drop-off — and no one had looked at the full journey holistically. This case study is about changing that.</p>
+    <div class="cm" style="margin-top:40px;">
+      <div class="cmi"><p class="sec-label" style="color:#6B2FFA;margin-bottom:6px;">My Role</p><p style="font-family:'Manrope',sans-serif;font-size:13px;color:#2a2a2b;line-height:1.6;">Product Designer — leading research synthesis, UX strategy, mobile web design, and developer handoff</p></div>
+      <div class="cmi"><p class="sec-label" style="color:#6B2FFA;margin-bottom:6px;">Team</p><p style="font-family:'Manrope',sans-serif;font-size:13px;color:#2a2a2b;line-height:1.6;">Product Researcher, Product Owner, Front-end Developers, QA</p></div>
+      <div class="cmi"><p class="sec-label" style="color:#6B2FFA;margin-bottom:6px;">Platform</p><p style="font-family:'Manrope',sans-serif;font-size:13px;color:#2a2a2b;line-height:1.6;">Mobile web (AWD) — Poland's #1 recruitment portal, millions of monthly sessions</p></div>
+      <div class="cmi"><p class="sec-label" style="color:#6B2FFA;margin-bottom:6px;">Tools</p><p style="font-family:'Manrope',sans-serif;font-size:13px;color:#2a2a2b;line-height:1.6;">Figma · Miro · Jira · Confluence · Excel · ChatGPT</p></div>
+    </div>
+  </div>
+
+  <!-- HERO IMAGE -->
+  <div style="height:520px;overflow:hidden;border-bottom:1px solid rgba(26,26,27,.08);">
+    <img src="Pracuj_pl.png" alt="Pracuj.pl mobile web" style="width:100%;height:100%;object-fit:cover;object-position:top;display:block;"/>
+  </div>
+
+  <div class="cw">
+
+    <!-- SECTION 1: Context & Problem -->
+    <div class="cr">
+      <div>
+        <p class="sec-label" style="color:#6B2FFA;margin-bottom:8px;">01</p>
+        <h2 style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:16px;text-transform:uppercase;letter-spacing:.06em;line-height:1.4;">Context &amp;<br/>Problem</h2>
+      </div>
+      <div>
+        <p style="font-family:'Manrope',sans-serif;font-size:14px;color:#737577;line-height:1.85;font-weight:300;margin-bottom:20px;">Pracuj.pl serves four distinct user segments — white collar specialists and managers, blue collar workers in production and logistics, pink collar professionals in service and sales, and IT/digital specialists who represent the highest-demand segment on the platform. Each of these groups uses mobile web differently, with different goals and different pain points.</p>
+        <p style="font-family:'Manrope',sans-serif;font-size:14px;color:#737577;line-height:1.85;font-weight:300;margin-bottom:20px;">The mobile web experience had been built incrementally — new features added over time without ever stepping back to evaluate the full user journey. The result was a fragmented flow: search filters were difficult to use on small screens, the application process required too many steps, and users were dropping off before completing key actions that drive business value for the platform.</p>
+        <p style="font-family:'Manrope',sans-serif;font-size:14px;color:#737577;line-height:1.85;font-weight:300;">My job was to map the real experience, identify where and why users were leaving, and redesign the flow with a clear conversion focus — without breaking what was already working.</p>
+        <!-- Highlighted insight block -->
+        <div style="margin-top:28px;padding:24px 28px;border-left:3px solid #6B2FFA;background:rgba(107,47,250,.04);">
+          <p style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:13px;color:#1a1a1b;line-height:1.6;">The core tension: a platform used by millions, where even small friction points in the mobile flow represent a significant business problem — but any change at this scale carries real risk.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 2: My Approach -->
+    <div class="cr">
+      <div>
+        <p class="sec-label" style="color:#6B2FFA;margin-bottom:8px;">02</p>
+        <h2 style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:16px;text-transform:uppercase;letter-spacing:.06em;line-height:1.4;">My Approach</h2>
+      </div>
+      <div>
+        <p style="font-family:'Manrope',sans-serif;font-size:14px;color:#737577;line-height:1.85;font-weight:300;margin-bottom:24px;">Before touching any screens, I needed to understand what was actually happening. I started by auditing the existing mobile web flow end-to-end — documenting every screen, every interaction, and every point where user momentum could be interrupted. This gave us a shared baseline and made the problems visible to the whole team, not just to me.</p>
+        <p style="font-family:'Manrope',sans-serif;font-size:14px;color:#737577;line-height:1.85;font-weight:300;margin-bottom:24px;">From there, I ran an alignment workshop with the Product Owner and Product Researcher to pressure-test our initial hypotheses. I've found this step is often skipped — teams assume they know what the problem is. The workshop surfaced several assumptions that turned out to be wrong, which saved us from designing solutions for the wrong problems.</p>
+        <p style="font-family:'Manrope',sans-serif;font-size:14px;color:#737577;line-height:1.85;font-weight:300;">The research phase combined qualitative user sessions across all four segments with task-based usability testing of the existing flow. I focused on recruiting participants who actually use mobile web for job searching — not desktop-first users who occasionally switch to mobile — because their behaviour patterns are fundamentally different.</p>
+      </div>
+    </div>
+
+    <!-- SECTION 3: Process steps — tighter visual list -->
+    <div class="cr">
+      <div>
+        <p class="sec-label" style="color:#6B2FFA;margin-bottom:8px;">03</p>
+        <h2 style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:16px;text-transform:uppercase;letter-spacing:.06em;line-height:1.4;">Process</h2>
+      </div>
+      <div>
+        <ul class="cp">
+          <li>
+            <span class="sec-label" style="color:#6B2FFA;">01</span>
+            <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#2a2a2b;">Analysis</span>
+            <p style="font-family:'Manrope',sans-serif;font-size:12px;color:#737577;font-weight:300;line-height:1.7;">Full audit of the existing mobile web flow. I mapped every screen and transition, identified structural inconsistencies, and cross-referenced with available analytics to locate the highest drop-off points. This gave the team a concrete, shared picture of the problem — not just a vague sense that "mobile isn't working".</p>
+          </li>
+          <li>
+            <span class="sec-label" style="color:#6B2FFA;">02</span>
+            <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#2a2a2b;">Alignment &amp; Strategies</span>
+            <p style="font-family:'Manrope',sans-serif;font-size:12px;color:#737577;font-weight:300;line-height:1.7;">Workshop with the PO and researcher to define the scope and agree on success criteria before research began. We also used this session to align on the four user segments and agree on which hypotheses were strong enough to test versus which needed more data first.</p>
+          </li>
+          <li>
+            <span class="sec-label" style="color:#6B2FFA;">03</span>
+            <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#2a2a2b;">Research</span>
+            <p style="font-family:'Manrope',sans-serif;font-size:12px;color:#737577;font-weight:300;line-height:1.7;">Qualitative sessions with real users across all four segments, each performing the same core tasks on the live mobile web: searching for a job, filtering results, opening a job detail, and completing an application. Sessions were recorded and analysed for patterns in behaviour, hesitation points, and verbal feedback.</p>
+          </li>
+          <li>
+            <span class="sec-label" style="color:#6B2FFA;">04</span>
+            <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#2a2a2b;">Key Findings</span>
+            <p style="font-family:'Manrope',sans-serif;font-size:12px;color:#737577;font-weight:300;line-height:1.7;">Three systemic issues emerged across all segments: filters were buried and too complex to use on touch, the application flow had redundant steps that caused users to abandon mid-process, and feedback states (loading, confirmation, errors) were unclear — leaving users uncertain whether their actions had registered. A fourth finding specific to IT/digital users was that the mobile job card showed too little information to make a decision without opening the full detail page, increasing back-navigation friction.</p>
+          </li>
+          <li>
+            <span class="sec-label" style="color:#6B2FFA;">05</span>
+            <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#2a2a2b;">Prioritisation Workshop</span>
+            <p style="font-family:'Manrope',sans-serif;font-size:12px;color:#737577;font-weight:300;line-height:1.7;">I ran a collaborative impact/effort session with the PO and development lead to score each finding against two axes: estimated business impact and implementation complexity. This produced a clear first-wave scope — the changes most likely to move conversion metrics without requiring a full platform rebuild.</p>
+          </li>
+          <li>
+            <span class="sec-label" style="color:#6B2FFA;">06</span>
+            <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#2a2a2b;">Tech Alignment</span>
+            <p style="font-family:'Manrope',sans-serif;font-size:12px;color:#737577;font-weight:300;line-height:1.7;">Before moving to high-fidelity design, I presented the prioritised solutions to the front-end team to validate feasibility and surface any technical constraints early. Two proposed changes required renegotiation at this stage — better to know before spending time on detailed screens than after.</p>
+          </li>
+          <li style="border-bottom:none;">
+            <span class="sec-label" style="color:#6B2FFA;">07</span>
+            <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#2a2a2b;">Final Designs &amp; Handoff</span>
+            <p style="font-family:'Manrope',sans-serif;font-size:12px;color:#737577;font-weight:300;line-height:1.7;">High-fidelity mobile web screens covering the full redesigned flow: search entry, filter panel, results list, job detail card, and application steps. Delivered in Figma with full component annotations, interaction notes, and edge-case states. I stayed involved through QA to ensure the shipped product matched the intent of the design.</p>
+          </li>
+        </ul>
+
+        <!-- Process artefact image -->
+        <div style="margin-top:20px;border-radius:4px;overflow:hidden;box-shadow:0 12px 32px rgba(107,47,250,.1);">
+          <img src="Pracuj_pl_Improvements_to_the_mobile_web_application_flow.png" alt="Pracuj.pl process artefacts" style="width:100%;object-fit:cover;object-position:top;display:block;"/>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 4: Key Design Decisions -->
+    <div class="cr">
+      <div>
+        <p class="sec-label" style="color:#6B2FFA;margin-bottom:8px;">04</p>
+        <h2 style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:16px;text-transform:uppercase;letter-spacing:.06em;line-height:1.4;">Key Design<br/>Decisions</h2>
+      </div>
+      <div>
+        <!-- Decision 1 -->
+        <div style="margin-bottom:32px;padding-bottom:32px;border-bottom:1px solid rgba(26,26,27,.07);">
+          <p style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:#1a1a1b;margin-bottom:10px;">Filter redesign — from buried to one tap</p>
+          <p style="font-family:'Manrope',sans-serif;font-size:13px;color:#737577;line-height:1.8;font-weight:300;">The existing filter was a full-page overlay requiring multiple taps to reach. Research showed users were either not using filters at all, or abandoning when the results didn't match what they wanted. I redesigned the filter entry as a persistent chip row below the search bar — always visible, immediately actionable — with a condensed panel for advanced options. This reduced the interaction cost from 4+ taps to 1.</p>
+        </div>
+        <!-- Decision 2 -->
+        <div style="margin-bottom:32px;padding-bottom:32px;border-bottom:1px solid rgba(26,26,27,.07);">
+          <p style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:#1a1a1b;margin-bottom:10px;">Application flow — removing invisible friction</p>
+          <p style="font-family:'Manrope',sans-serif;font-size:13px;color:#737577;line-height:1.8;font-weight:300;">The application process had 6 steps on mobile. Several were redundant or required information that could be pre-filled from the user's profile. I worked with the PO to identify which fields were truly required at application time versus which could be deferred, and reduced the required steps to 3 for returning users. For new users, I introduced a progress indicator so the end of the process was always visible — one of the simplest changes with the clearest impact on completion rate.</p>
+        </div>
+        <!-- Decision 3 -->
+        <div>
+          <p style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:#1a1a1b;margin-bottom:10px;">Job card density — more signal, less noise</p>
+          <p style="font-family:'Manrope',sans-serif;font-size:13px;color:#737577;line-height:1.8;font-weight:300;">IT/digital users in particular were opening job detail pages only to go straight back — the card wasn't showing enough information to make a decision. I increased the information density of the card to include salary range (where available), seniority level, and work model (remote/hybrid/on-site) without increasing the card height. This reduced unnecessary page loads and back-navigation, improving the perceived speed of the experience.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 5: Outcome -->
+    <div class="cr" style="border-bottom:none;">
+      <div>
+        <p class="sec-label" style="color:#6B2FFA;margin-bottom:8px;">05</p>
+        <h2 style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:16px;text-transform:uppercase;letter-spacing:.06em;line-height:1.4;">Outcome</h2>
+      </div>
+      <div>
+        <p style="font-family:'Manrope',sans-serif;font-size:14px;color:#737577;line-height:1.85;font-weight:300;margin-bottom:32px;">The redesigned mobile web flow was shipped across Pracuj.pl's platform, reaching millions of monthly users across Poland. The project became a reference point for how to approach mobile UX improvements on the platform — establishing a methodology that the product team could repeat for future features.</p>
+
+        <!-- Impact numbers -->
+        <div class="ci">
+          <div class="cii">
+            <p style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:48px;letter-spacing:-.04em;color:#6B2FFA;margin-bottom:10px;">M+</p>
+            <p style="font-family:'Manrope',sans-serif;font-size:12px;color:#737577;line-height:1.6;">Monthly users reached by the redesigned flow after shipping</p>
+          </div>
+          <div class="cii">
+            <p style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:48px;letter-spacing:-.04em;color:#6B2FFA;margin-bottom:10px;">4</p>
+            <p style="font-family:'Manrope',sans-serif;font-size:12px;color:#737577;line-height:1.6;">Distinct user segments researched, each with different mobile behaviour patterns</p>
+          </div>
+          <div class="cii">
+            <p style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:48px;letter-spacing:-.04em;color:#6B2FFA;margin-bottom:10px;">3→1</p>
+            <p style="font-family:'Manrope',sans-serif;font-size:12px;color:#737577;line-height:1.6;">Tap reduction to reach filters — from buried overlay to a single persistent chip row</p>
+          </div>
+        </div>
+
+        <!-- What I learned -->
+        <div style="margin-top:36px;padding:28px 32px;background:#fafafa;border-radius:4px;border:1px solid rgba(26,26,27,.07);">
+          <p style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:#6B2FFA;margin-bottom:14px;">What I'd do differently</p>
+          <p style="font-family:'Manrope',sans-serif;font-size:13px;color:#737577;line-height:1.8;font-weight:300;">I'd push earlier for instrumentation on specific interactions — not just page-level analytics. Going into the project we had drop-off data at the page level, but not at the component level. Knowing exactly where within the filter panel or application form users were abandoning would have made prioritisation sharper and the business case for each change more concrete. This is something I now advocate for in every project from kick-off.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- BOTTOM NAV -->
+    <div class="cnb">
+      <button onclick="showPage('home')" class="al" style="flex-direction:row-reverse;"><span class="material-symbols-outlined">arrow_back</span>All projects</button>
+      <button onclick="showPage('cs-aiocare')" class="al">Back to first <span class="material-symbols-outlined">arrow_forward</span></button>
+    </div>
+  </div>
+</div>
+
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  // Cursor
+  const cur = document.getElementById('cursor');
+  const ring = document.getElementById('cursor-ring');
+  document.addEventListener('mousemove', e => {
+    cur.style.left  = e.clientX + 'px';
+    cur.style.top   = e.clientY + 'px';
+    ring.style.left = e.clientX + 'px';
+    ring.style.top  = e.clientY + 'px';
+  });
+
+  // Page routing
+  function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    const t = document.getElementById('page-' + id);
+    if (t) { t.classList.add('active'); window.scrollTo(0, 0); }
+    document.getElementById('nw').className = 'nav-lnk';
+    document.getElementById('na').className = 'nav-lnk';
+    if (id === 'home')  document.getElementById('nw').className = 'nav-lnk active';
+    if (id === 'about') document.getElementById('na').className = 'nav-lnk active';
+    setTimeout(initReveal, 60);
+  }
+
+  function goContact() {
+    showPage('home');
+    setTimeout(() => document.getElementById('contact-anchor').scrollIntoView({ behavior: 'smooth' }), 100);
+  }
+
+  // Scroll reveal
+  function initReveal() {
+    const els = document.querySelectorAll('.page.active .rv:not(.on)');
+    if (!els.length) return;
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('on'); obs.unobserve(e.target); }
+      });
+    }, { threshold: 0.0, rootMargin: '0px 0px -40px 0px' });
+    els.forEach(el => obs.observe(el));
+  }
+  // Fallback: force-show all rv elements after 400ms regardless
+  setTimeout(() => {
+    document.querySelectorAll('.page.active .rv').forEach(el => el.classList.add('on'));
+  }, 400);
+  // Also trigger on scroll in case observer misses
+  window.addEventListener('scroll', () => {
+    document.querySelectorAll('.page.active .rv:not(.on)').forEach(el => {
+      const r = el.getBoundingClientRect();
+      if (r.top < window.innerHeight - 40) el.classList.add('on');
+    });
+  }, { passive: true });
+</script>
+</body>
+</html>
