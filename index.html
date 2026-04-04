@@ -567,6 +567,7 @@
       </div>
       <div>
         <p style="font-family:'Manrope',sans-serif;font-size:14px;color:#737577;line-height:1.85;font-weight:300;margin-bottom:20px;">The project started with a concrete business problem: a low percentage of users were completing the login process, and many were calling operator helplines because they couldn't navigate onboarding. Product analytics confirmed a low completion rate. Operator helplines simultaneously reported a high volume of calls from users who didn't know how to proceed.</p>
+        <p style="font-family:'Manrope',sans-serif;font-size:14px;color:#737577;line-height:1.85;font-weight:300;margin-bottom:20px;">TV Smart serves two distinct user types. <strong style="color:#1a1a1b;font-weight:500;">Subscription users</strong> register and log in directly through the TV Smart platform. <strong style="color:#1a1a1b;font-weight:500;">Operator users</strong> are customers of separate partner companies — Vectra, Multimedia, Jambox, and Elsat — who received access to TV Smart as part of their operator package. These users have their own dedicated login path, using credentials from their operator's system (e.g. customer number, eBOK login), not a TV Smart account. This distinction is fundamental to understanding why the login flow is complex and why a single generic form failed both groups.</p>
         <div style="padding:24px 28px;border-left:3px solid #6B2FFA;background:rgba(107,47,250,.04);margin-bottom:20px;">
           <p style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:13px;color:#1a1a1b;line-height:1.6;">For the business this meant: lost user activations, rising support costs, customer frustration, and a negative first product experience. We knew a problem existed — but not why users were dropping off.</p>
         </div>
@@ -604,14 +605,14 @@
         <h2 style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:16px;text-transform:uppercase;letter-spacing:.06em;line-height:1.4;">Usability<br/>Research</h2>
       </div>
       <div>
-        <p style="font-family:'Manrope',sans-serif;font-size:14px;color:#737577;line-height:1.85;font-weight:300;margin-bottom:24px;">I conducted usability tests with 10 participants — 5 operator users and 5 retail users. During sessions I observed moments of hesitation, login path choices, reactions to errors, and decisions to restart the process.</p>
+        <p style="font-family:'Manrope',sans-serif;font-size:14px;color:#737577;line-height:1.85;font-weight:300;margin-bottom:24px;">I conducted usability tests with 10 participants — 5 operator users and 5 subscription users. During sessions I observed moments of hesitation, login path choices, reactions to errors, and decisions to restart the process.</p>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px;background:rgba(26,26,27,.08);border:1px solid rgba(26,26,27,.08);margin-bottom:24px;">
           <div style="background:#fff;padding:22px 20px;">
             <p style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#6B2FFA;margin-bottom:12px;">Operator users (5)</p>
             <p style="font-family:'Manrope',sans-serif;font-size:12px;color:#737577;line-height:1.75;font-weight:300;">Didn't notice the operator tab. Entered operator credentials into the TV Smart form. Received a generic "invalid credentials" error with no indication of the cause. Made repeated attempts instead of switching path. <strong style="color:#1a1a1b;font-weight:500;">The error was interpreted as a password problem, not a process selection problem.</strong></p>
           </div>
           <div style="background:#fff;padding:22px 20px;">
-            <p style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#6B2FFA;margin-bottom:12px;">Retail users (5)</p>
+            <p style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#6B2FFA;margin-bottom:12px;">Subscription users (5)</p>
             <p style="font-family:'Manrope',sans-serif;font-size:12px;color:#737577;line-height:1.75;font-weight:300;">Preferred social login and ignored the traditional form when an alternative existed. Registration requiring sign-up then re-login felt long and unintuitive. Extra steps raised doubts about whether the system was working. <strong style="color:#1a1a1b;font-weight:500;">Onboarding needed to be as frictionless as possible.</strong></p>
           </div>
         </div>
@@ -648,7 +649,7 @@
 
         <div style="margin-bottom:28px;padding-bottom:28px;border-bottom:1px solid rgba(26,26,27,.07);">
           <p style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:#1a1a1b;margin-bottom:10px;">Social login elevated as default — before &amp; after</p>
-          <p style="font-family:'Manrope',sans-serif;font-size:13px;color:#737577;line-height:1.8;font-weight:300;margin-bottom:16px;">Research showed retail users preferred and actively sought social login. We moved it to the primary position — top of the form — to match actual usage patterns, reduce friction, and shorten the onboarding path for the majority of new users.</p>
+          <p style="font-family:'Manrope',sans-serif;font-size:13px;color:#737577;line-height:1.8;font-weight:300;margin-bottom:16px;">Research showed subscription users preferred and actively sought social login. We moved it to the primary position — top of the form — to match actual usage patterns, reduce friction, and shorten the onboarding path for the majority of new users.</p>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
             <div>
               <p class="sec-label" style="color:#a0a3a5;margin-bottom:10px;">Before</p>
@@ -701,10 +702,10 @@
       </div>
       <div>
         <div style="margin-bottom:12px;border-radius:4px;overflow:hidden;box-shadow:0 8px 24px rgba(26,26,27,.07);">
-          <img src="Frame_1000001619.png" alt="Final retail login form" style="width:100%;display:block;"/>
+          <img src="Frame_1000001619.png" alt="Final subscription user login form" style="width:100%;display:block;"/>
         </div>
         <div style="margin-bottom:12px;border-radius:4px;overflow:hidden;box-shadow:0 8px 24px rgba(26,26,27,.07);">
-          <img src="Frame_1000001620.png" alt="Final retail registration form" style="width:100%;display:block;"/>
+          <img src="Frame_1000001620.png" alt="Final subscription user registration form" style="width:100%;display:block;"/>
         </div>
         <div style="border-radius:4px;overflow:hidden;box-shadow:0 12px 32px rgba(107,47,250,.1);background:#0a0a0a;">
           <img src="Frame_34794.png" alt="TV Smart final mockup" style="width:100%;display:block;"/>
